@@ -1,0 +1,161 @@
+{% extends "dashboard/accueil.html" %}
+
+{% block title %}Décès - {{ mairie.nom }}{% endblock %}
+
+{% block content %}
+
+<div style="
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 2px 10px #ddd;
+    margin-bottom:30px;
+">
+
+    <h2>⚰️ Enregistrer un décès</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div style="margin-top:25px;">
+
+            <a href="/" style="
+                display:inline-block;
+                padding:12px 20px;
+                background:#eee;
+                color:#222;
+                text-decoration:none;
+                border-radius:6px;
+                margin-right:10px;
+            ">
+                ← Tableau de bord
+            </a>
+
+            <button type="submit" style="
+                padding:12px 20px;
+                background:#0d4f3c;
+                color:white;
+                border:0;
+                border-radius:6px;
+                font-weight:bold;
+                cursor:pointer;
+            ">
+                💾 Enregistrer le décès
+            </button>
+
+        </div>
+    </form>
+
+</div>
+
+
+<div style="
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 2px 10px #ddd;
+">
+
+    <h2>📋 Décès enregistrés</h2>
+
+    {% if deces_liste %}
+
+    <div style="overflow-x:auto;">
+
+        <table style="
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        ">
+
+            <thead>
+
+                <tr style="background:#0d4f3c;color:white;">
+
+                    <th style="padding:12px;text-align:left;">N° acte</th>
+                    <th style="padding:12px;text-align:left;">Défunt</th>
+                    <th style="padding:12px;text-align:left;">Date décès</th>
+                    <th style="padding:12px;text-align:left;">Lieu</th>
+                    <th style="padding:12px;text-align:left;">Statut</th>
+                    <th style="padding:12px;text-align:left;">Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for deces in deces_liste %}
+
+                <tr style="border-bottom:1px solid #ddd;">
+
+                    <td style="padding:12px;">
+                        <strong>{{ deces.acte.numero }}</strong>
+                    </td>
+
+                    <td style="padding:12px;">
+                        {{ deces.defunt.nom }}
+                        {{ deces.defunt.prenom }}
+                    </td>
+
+                    <td style="padding:12px;">
+                        {{ deces.date_deces|date:"d/m/Y" }}
+                    </td>
+
+                    <td style="padding:12px;">
+                        {{ deces.lieu_deces }}
+                    </td>
+
+                    <td style="padding:12px;">
+
+                        {% if deces.acte.statut == "VALIDE" %}
+                            <span style="color:green;font-weight:bold;">
+                                ✅ Validé
+                            </span>
+                        {% elif deces.acte.statut == "BROUILLON" %}
+                            <span style="color:#b06a00;font-weight:bold;">
+                                📝 Brouillon
+                            </span>
+                        {% else %}
+                            <span style="color:red;font-weight:bold;">
+                                ❌ Annulé
+                            </span>
+                        {% endif %}
+
+                    </td>
+
+                    <td style="padding:12px;">
+
+                        <a
+                            href="/documents/acte/{{ deces.acte.id }}/"
+                            target="_blank"
+                            style="text-decoration:none;font-weight:bold;"
+                        >
+                            🖨️ Voir
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+        <p style="color:#777;">
+            Aucun décès enregistré pour le moment.
+        </p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

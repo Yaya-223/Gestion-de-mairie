@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Acte {{ acte.numero }}</title>
+
+<style>
+body {
+            font-family: Arial, sans-serif;
+            background: #eee;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .document {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        .entete {
+            text-align: center;
+            border-bottom: 2px solid #222;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        .numero {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        .ligne {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .signature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 80px;
+        }
+
+        .actions {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .document {
+                box-shadow: none;
+            }
+
+            .actions {
+                display: none;
+            }
+        }
+</style>
+</head>
+
+<body>
+
+<div class="actions">
+    <button onclick="window.print()">🖨️ Imprimer l'acte</button>
+</div>
+
+<div class="document">
+
+    <div class="entete">
+        <h1>{{ acte.mairie.nom }}</h1>
+        <p>{{ acte.mairie.code }}</p>
+        <p>{{ acte.mairie.adresse }}</p>
+    </div>
+
+    <div class="numero">
+        ACTE N° {{ acte.numero }}
+    </div>
+<div style="text-align:center; margin:20px;">
+    <strong>
+        Statut :
+        {% if acte.statut == "VALIDE" %}
+            ✅ VALIDÉ
+        {% elif acte.statut == "BROUILLON" %}
+            📝 BROUILLON
+        {% else %}
+            ❌ ANNULÉ
+        {% endif %}
+    </strong>
+</div>
+
+{% if acte.statut == "BROUILLON" %}
+<div class="actions">
+    <a href="/etat-civil/acte/{{ acte.id }}/valider/"
+       onclick="return confirm('Confirmer la validation de cet acte ?');">
+        <button>✅ Valider officiellement l'acte</button>
+    </a>
+</div>
+{% endif %}
+
+    <div class="section">
+        <div class="ligne">
+            <strong>Type d'acte :</strong>
+            {{ acte.get_type_acte_display }}
+        </div>
+
+        <div class="ligne">
+            <strong>Date de l'acte :</strong>
+            {{ acte.date_acte|date:"d/m/Y" }}
+        </div>
+
+        <div class="ligne">
+            <strong>Année :</strong>
+            {{ acte.annee }}
+        </div>
+
+        <div class="ligne">
+            <strong>Statut :</strong>
+            {{ acte.get_statut_display }}
+        </div>
+    </div>
+
+    {% if acte.naissance %}
+    <div class="section">
+        <h2>Informations sur la naissance</h2>
+
+        <div class="ligne">
+            <strong>Enfant :</strong>
+            {{ acte.naissance.enfant.nom }}
+            {{ acte.naissance.enfant.prenom }}
+        </div>
+
+        <div class="ligne">
+            <strong>Sexe :</strong>
+            {{ acte.naissance.enfant.get_sexe_display }}
+        </div>
+
+        <div class="ligne">
+            <strong>Date de naissance :</strong>
+            {{ acte.naissance.enfant.date_naissance|date:"d/m/Y" }}
+        </div>
+
+        <div class="ligne">
+            <strong>Lieu de naissance :</strong>
+            {{ acte.naissance.lieu_naissance }}
+        </div>
+
+        <div class="ligne">
+            <strong>Père :</strong>
+            {{ acte.naissance.pere|default:"Non renseigné" }}
+        </div>
+
+        <div class="ligne">
+            <strong>Mère :</strong>
+            {{ acte.naissance.mere|default:"Non renseignée" }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if acte.mariage %}
+    <div class="section">
+        <h2>Informations sur le mariage</h2>
+
+        <div class="ligne">
+            <strong>Époux :</strong>
+            {{ acte.mariage.epoux }}
+        </div>
+
+        <div class="ligne">
+            <strong>Épouse :</strong>
+            {{ acte.mariage.epouse }}
+        </div>
+
+        <div class="ligne">
+            <strong>Date :</strong>
+            {{ acte.mariage.date_mariage|date:"d/m/Y" }}
+        </div>
+
+        <div class="ligne">
+            <strong>Lieu :</strong>
+            {{ acte.mariage.lieu_mariage }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if acte.deces %}
+    <div class="section">
+        <h2>Informations sur le décès</h2>
+
+        <div class="ligne">
+            <strong>Défunt :</strong>
+            {{ acte.deces.defunt }}
+        </div>
+
+        <div class="ligne">
+            <strong>Date du décès :</strong>
+            {{ acte.deces.date_deces|date:"d/m/Y" }}
+        </div>
+
+        <div class="ligne">
+            <strong>Lieu :</strong>
+            {{ acte.deces.lieu_deces }}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="signature">
+        <div>
+            <strong>L'agent d'état civil</strong>
+        </div>
+
+        <div>
+            <strong>Signature / Cachet</strong>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

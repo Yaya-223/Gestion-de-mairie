@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Tableau de bord - Mairie</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #123c2f;
+            color: white;
+            padding: 20px 35px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header p {
+            margin: 8px 0 0;
+        }
+
+        nav {
+            background: white;
+            padding: 15px 35px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav a {
+            margin-right: 25px;
+            text-decoration: none;
+            color: #123c2f;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 35px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #555;
+        }
+
+        .number {
+            font-size: 38px;
+            font-weight: bold;
+            color: #123c2f;
+        }
+
+        .actions {
+            margin-top: 35px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .action {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #222;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .action:hover {
+            background: #eef5f2;
+        }
+
+        @media (max-width: 900px) {
+            .cards,
+            .actions {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .cards,
+            .actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Administration municipale</h1>
+
+    {% if mairie %}
+        <p>{{ mairie.nom }} — {{ mairie.code }}</p>
+    {% endif %}
+</header>
+
+<nav>
+    <a href="/">Tableau de bord</a>
+    <a href="/naissances/nouvelle/">Naissance</a>
+    <a href="/mariages/nouveau/">Mariage</a>
+    <a href="/deces/nouveau/">Décès</a>
+    <a href="/recherche/">Recherche</a>
+    <a href="/admin/">Administration</a>
+</nav>
+
+<main>
+
+    <h2>Tableau de bord</h2>
+
+    <p>
+        Bienvenue,
+        <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>.
+    </p>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Citoyens</h3>
+            <div class="number">{{ citoyens }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Total actes</h3>
+            <div class="number">{{ actes }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Naissances</h3>
+            <div class="number">{{ naissances }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Mariages</h3>
+            <div class="number">{{ mariages }}</div>
+        </div>
+
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Décès</h3>
+            <div class="number">{{ deces }}</div>
+        </div>
+
+    </div>
+
+    <h2 style="margin-top: 45px;">
+        Opérations rapides
+    </h2>
+
+    <div class="actions">
+
+        <a class="action" href="/naissances/nouvelle/">
+            <h3>➕ Nouvel acte de naissance</h3>
+            <p>Enregistrer une nouvelle naissance.</p>
+        </a>
+
+        <a class="action" href="/mariages/nouveau/">
+            <h3>💍 Nouvel acte de mariage</h3>
+            <p>Enregistrer un nouveau mariage.</p>
+        </a>
+
+        <a class="action" href="/deces/nouveau/">
+            <h3>⚰️ Nouvel acte de décès</h3>
+            <p>Enregistrer un nouveau décès.</p>
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
